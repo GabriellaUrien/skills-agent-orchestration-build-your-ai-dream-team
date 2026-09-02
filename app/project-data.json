@@ -1,0 +1,39 @@
+{
+  "projects": [
+    {
+      "name": "Customer Health Signals",
+      "owner": "Mona Patel",
+      "status": "on-track",
+      "recentActivity": "Prototype scoring model reviewed with customer success leads.",
+      "priority": "high"
+    },
+    {
+      "name": "Billing Portal Refresh",
+      "owner": "Diego Ramos",
+      "status": "at-risk",
+      "recentActivity": "Payment method migration needs one more compliance review.",
+      "priority": "high"
+    },
+    {
+      "name": "Knowledge Base Cleanup",
+      "owner": "Avery Chen",
+      "status": "shipped",
+      "recentActivity": "Archived outdated articles and published the new onboarding collection.",
+      "priority": "medium"
+    },
+    {
+      "name": "Partner API Sandbox",
+      "owner": "Samira Khan",
+      "status": "blocked",
+      "recentActivity": "Waiting on final OAuth credentials from the platform team.",
+      "priority": "medium"
+    },
+    {
+      "name": "Quarterly Insights Digest",
+      "owner": "Noah Brooks",
+      "status": "on-track",
+      "recentActivity": "Draft charts are ready for editorial review this week.",
+      "priority": "low"
+    }
+  ]
+}

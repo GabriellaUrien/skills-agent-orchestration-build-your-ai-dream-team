@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="dashboard__header">
+      <h1>Project Pulse</h1>
+      <p>Track active work, ownership, and momentum across the team.</p>
+    </header>
+
+    <section class="dashboard__grid" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const knownStatuses = new Set(['on-track', 'at-risk', 'blocked', 'shipped']);
+    const knownPriorities = new Set(['low', 'medium', 'high']);
+    const grid = document.querySelector('.dashboard__grid');
+
+    function warnIfUnknown(project) {
+      if (!knownStatuses.has(project.status)) {
+        console.warn(`Unknown project status: ${project.status}`);
+      }
+
+      if (!knownPriorities.has(project.priority)) {
+        console.warn(`Unknown project priority: ${project.priority}`);
+      }
+    }
+
+    function renderMessage(className, message) {
+      grid.replaceChildren();
+      const paragraph = document.createElement('p');
+      paragraph.className = className;
+      paragraph.textContent = message;
+      grid.append(paragraph);
+    }
+
+    function renderProject(project) {
+      warnIfUnknown(project);
+
+      const card = document.createElement('article');
+      card.className = 'project-card';
+      card.dataset.status = project.status;
+      card.dataset.priority = project.priority;
+
+      const title = document.createElement('h2');
+      title.textContent = project.name;
+
+      const owner = document.createElement('p');
+      owner.className = 'project-card__owner';
+      owner.textContent = `Owned by ${project.owner}`;
+
+      const status = document.createElement('span');
+      status.className = 'project-card__status';
+      status.dataset.status = project.status;
+      status.textContent = project.status;
+
+      const activity = document.createElement('p');
+      activity.className = 'project-card__activity';
+      activity.textContent = project.recentActivity;
+
+      const priority = document.createElement('span');
+      priority.className = 'project-card__priority';
+      priority.dataset.priority = project.priority;
+      priority.textContent = project.priority;
+
+      card.append(title, owner, status, activity, priority);
+      return card;
+    }
+
+    async function loadProjects() {
+      try {
+        const response = await fetch('./project-data.json');
+
+        if (!response.ok) {
+          throw new Error(`Project data request failed with ${response.status}`);
+        }
+
+        const data = await response.json();
+        const projects = Array.isArray(data.projects) ? data.projects : [];
+
+        if (projects.length === 0) {
+          renderMessage('dashboard__empty', 'No projects yet.');
+          return;
+        }
+
+        grid.replaceChildren(...projects.map(renderProject));
+      } catch (error) {
+        console.error(error);
+        renderMessage('dashboard__error', 'Project Pulse must be served over HTTP to load project data.');
+      }
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>

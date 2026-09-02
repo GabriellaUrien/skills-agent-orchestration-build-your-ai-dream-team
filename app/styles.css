@@ -1,0 +1,352 @@
+/* Project Pulse dashboard styles
+   Owner: Designer. Scope: this file only.
+   Contract hooks: .dashboard, .project-card, [data-status], [data-priority]. */
+
+:root {
+  /* Color scale — chosen for WCAG AA on the surfaces they're used on. */
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f0f2f8;
+  --color-border: #d9deea;
+  --color-text: #12172a;
+  --color-text-muted: #4c5570;
+  --color-text-subtle: #6b7391;
+  --color-accent: #3b4ed6;
+  --color-accent-strong: #2a3bb0;
+
+  /* Status palette — each pairs a hue with a label + glyph so meaning is not color-only. */
+  --color-on-track-bg: #dcf5e4;
+  --color-on-track-fg: #0f5d2a;
+  --color-at-risk-bg: #fff1cf;
+  --color-at-risk-fg: #6b4a00;
+  --color-blocked-bg: #fbdcdc;
+  --color-blocked-fg: #8a1418;
+  --color-shipped-bg: #e2e0fb;
+  --color-shipped-fg: #302178;
+  --color-unknown-bg: #e6e8ef;
+  --color-unknown-fg: #2c3348;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Radius scale */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(18, 23, 42, 0.06), 0 8px 24px rgba(18, 23, 42, 0.08);
+  --shadow-card-hover: 0 2px 4px rgba(18, 23, 42, 0.08), 0 16px 32px rgba(18, 23, 42, 0.14);
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 2rem;
+  --line-height-base: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ---------- Dashboard shell ---------- */
+
+.dashboard {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.dashboard__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard__header h1,
+.dashboard__title {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.dashboard__header p,
+.dashboard__subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+/* ---------- Card grid ---------- */
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--space-5);
+}
+
+/* ---------- Project card ---------- */
+
+.project-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  position: relative;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: #c3cae0;
+}
+
+.project-card h2,
+.project-card__name {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.project-card__owner {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.project-card__activity {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+/* ---------- Status badges ---------- */
+
+.project-card__status {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  background: var(--color-unknown-bg);
+  color: var(--color-unknown-fg);
+  border: 1px solid transparent;
+}
+
+/* Leading glyph so the badge conveys meaning without relying on color alone. */
+.project-card__status::before {
+  content: "•";
+  font-size: 1em;
+  line-height: 1;
+}
+
+[data-status="on-track"] .project-card__status {
+  background: var(--color-on-track-bg);
+  color: var(--color-on-track-fg);
+}
+[data-status="on-track"] .project-card__status::before {
+  content: "▲";
+}
+
+[data-status="at-risk"] .project-card__status {
+  background: var(--color-at-risk-bg);
+  color: var(--color-at-risk-fg);
+}
+[data-status="at-risk"] .project-card__status::before {
+  content: "!";
+  font-weight: 800;
+}
+
+[data-status="blocked"] .project-card__status {
+  background: var(--color-blocked-bg);
+  color: var(--color-blocked-fg);
+}
+[data-status="blocked"] .project-card__status::before {
+  content: "■";
+}
+
+[data-status="shipped"] .project-card__status {
+  background: var(--color-shipped-bg);
+  color: var(--color-shipped-fg);
+}
+[data-status="shipped"] .project-card__status::before {
+  content: "✓";
+  font-weight: 800;
+}
+
+/* ---------- Priority indicators ---------- */
+
+.project-card__priority {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--color-border);
+  margin-top: auto;
+}
+
+.project-card__priority::before {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text-subtle);
+}
+
+/* Distinguishable without color: number of bars + weight change. */
+[data-priority="low"] .project-card__priority {
+  font-weight: 500;
+}
+[data-priority="low"] .project-card__priority::before {
+  content: "▁";
+  color: #2c7a3f;
+}
+
+[data-priority="medium"] .project-card__priority {
+  font-weight: 600;
+}
+[data-priority="medium"] .project-card__priority::before {
+  content: "▁▄";
+  color: #a76a00;
+}
+
+[data-priority="high"] .project-card__priority {
+  font-weight: 800;
+  color: var(--color-text);
+}
+[data-priority="high"] .project-card__priority::before {
+  content: "▁▄█";
+  color: #a51f22;
+}
+
+/* Small accent stripe on high-priority cards so priority is visible at a glance. */
+[data-priority="high"].project-card {
+  border-left: 4px solid #a51f22;
+}
+
+/* ---------- Empty & error states ---------- */
+
+.dashboard__empty,
+.dashboard__error {
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  text-align: center;
+  font-size: var(--font-size-lg);
+  border: 1px dashed var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.dashboard__empty::before {
+  content: "📋 ";
+}
+
+.dashboard__error {
+  border-style: solid;
+  border-color: var(--color-blocked-fg);
+  background: var(--color-blocked-bg);
+  color: var(--color-blocked-fg);
+  font-weight: 600;
+}
+
+.dashboard__error::before {
+  content: "⚠ ";
+  font-weight: 800;
+}
+
+/* ---------- Responsive: collapse to a single column below ~600px ---------- */
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: var(--space-5) var(--space-4);
+    gap: var(--space-5);
+  }
+
+  .dashboard__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .dashboard__header h1,
+  .dashboard__title {
+    font-size: 1.625rem;
+  }
+}
+
+/* ---------- Dark mode ---------- */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1220;
+    --color-surface: #171b2e;
+    --color-surface-muted: #1d2238;
+    --color-border: #2a2f4a;
+    --color-text: #f2f4fb;
+    --color-text-muted: #b6bcd4;
+    --color-text-subtle: #8f97b4;
+
+    --color-on-track-bg: #103d20;
+    --color-on-track-fg: #b6f0c6;
+    --color-at-risk-bg: #4a3600;
+    --color-at-risk-fg: #ffe19a;
+    --color-blocked-bg: #4a1518;
+    --color-blocked-fg: #ffc9cb;
+    --color-shipped-bg: #26205e;
+    --color-shipped-fg: #d3ceff;
+    --color-unknown-bg: #262b44;
+    --color-unknown-fg: #dfe3f2;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 32px rgba(0, 0, 0, 0.5);
+  }
+}
